@@ -379,11 +379,6 @@ DxlError Dynamixel::Reboot(uint8_t id)
       stderr, "[ID:%03d] COMM_ERROR : %s\n",
       id, packet_handler_->getTxRxResult(dxl_comm_result));
     return DxlError::DXL_REBOOT_FAIL;
-  } else if (dxl_error != 0) {
-    fprintf(
-      stderr, "[ID:%03d] RX_PACKET_ERROR : %s\n",
-      id, packet_handler_->getRxPacketError(dxl_error));
-    return DxlError::DXL_REBOOT_FAIL;
   }
 
   fprintf(stderr, "[ID:%03d] Reboot Success!\n", id);
@@ -731,14 +726,6 @@ DxlError Dynamixel::WriteItem(
       if (i == MAX_COMM_RETRIES - 1) {
         return DxlError::ITEM_WRITE_FAIL;
       }
-    } else if (dxl_error != 0) {
-      fprintf(
-        stderr,
-        "[WriteItem][ID:%03d][comm_id:%03d] RX_PACKET_ERROR : %s\n",
-        id,
-        comm_id,
-        packet_handler_->getRxPacketError(dxl_error));
-      return DxlError::ITEM_WRITE_FAIL;
     } else {
       return DxlError::OK;
     }
@@ -861,28 +848,6 @@ DxlError Dynamixel::ReadItem(uint8_t comm_id, uint8_t id, std::string item_name,
       if (i == MAX_COMM_RETRIES - 1) {
         return DxlError::ITEM_READ_FAIL;
       }
-    } else if (dxl_error != 0) {
-      bool is_alert = dxl_error & 0x80;
-      if (is_alert) {
-        fprintf(
-          stderr,
-          "[ReadItem][ID:%03d][comm_id:%03d] RX_PACKET_ERROR : %s\n",
-          id,
-          comm_id,
-          packet_handler_->getRxPacketError(dxl_error));
-        return DxlError::OK;
-      }
-      fprintf(
-        stderr,
-        "[ReadItem][ID:%03d][comm_id:%03d] RX_PACKET_ERROR : %s (retry %d/%d)\n",
-        id,
-        comm_id,
-        packet_handler_->getRxPacketError(dxl_error),
-        i + 1,
-        MAX_COMM_RETRIES);
-      if (i == MAX_COMM_RETRIES - 1) {
-        return DxlError::ITEM_READ_FAIL;
-      }
     } else {
       return DxlError::OK;
     }
@@ -952,12 +917,6 @@ DxlError Dynamixel::ReadItemBuf()
           stderr, "[ID:%03d] COMM_ERROR : %s\n",
           id,
           packet_handler_->getTxRxResult(dxl_comm_result));
-        return DxlError::ITEM_READ_FAIL;
-      } else if (dxl_error != 0) {
-        fprintf(
-          stderr, "[ID:%03d] RX_PACKET_ERROR : %s\n",
-          id,
-          packet_handler_->getRxPacketError(dxl_error));
         return DxlError::ITEM_READ_FAIL;
       } else {
         it_read_item->read_flag = true;

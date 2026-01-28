@@ -617,25 +617,25 @@ hardware_interface::return_type DynamixelHardware::read(
     return hardware_interface::return_type::ERROR;
   } else if (dxl_status_ == DXL_OK || dxl_status_ == COMM_ERROR || dxl_status_ == HW_ERROR) {
     dxl_comm_err_ = CheckError(dxl_comm_->ReadMultiDxlData(period_ms));
-    if (dxl_comm_err_ != DxlError::OK && dxl_comm_err_ != DxlError::DXL_HARDWARE_ERROR) {
-      if (!is_read_in_error_) {
-        is_read_in_error_ = true;
-        read_error_duration_ = rclcpp::Duration(0, 0);
-      }
-      read_error_duration_ = read_error_duration_ + period;
+    // if (dxl_comm_err_ != DxlError::OK && dxl_comm_err_ != DxlError::DXL_HARDWARE_ERROR) {
+    //   if (!is_read_in_error_) {
+    //     is_read_in_error_ = true;
+    //     read_error_duration_ = rclcpp::Duration(0, 0);
+    //   }
+    //   read_error_duration_ = read_error_duration_ + period;
 
-      RCLCPP_ERROR_STREAM(
-        logger_,
-        "Dynamixel Read Fail (Duration: " << read_error_duration_.seconds() * 1000 << "ms/" <<
-          err_timeout_ms_ << "ms)");
+    //   RCLCPP_ERROR_STREAM(
+    //     logger_,
+    //     "Dynamixel Read Fail (Duration: " << read_error_duration_.seconds() * 1000 << "ms/" <<
+    //       err_timeout_ms_ << "ms)");
 
-      if (read_error_duration_.seconds() * 1000 >= err_timeout_ms_) {
-        return hardware_interface::return_type::ERROR;
-      }
-      return hardware_interface::return_type::OK;
-    }
-    is_read_in_error_ = false;
-    read_error_duration_ = rclcpp::Duration(0, 0);
+    //   if (read_error_duration_.seconds() * 1000 >= err_timeout_ms_) {
+    //     return hardware_interface::return_type::ERROR;
+    //   }
+    //   return hardware_interface::return_type::OK;
+    // }
+    // is_read_in_error_ = false;
+    // read_error_duration_ = rclcpp::Duration(0, 0);
   }
 
   CalcTransmissionToJoint();
