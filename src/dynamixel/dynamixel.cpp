@@ -1286,7 +1286,7 @@ DxlError Dynamixel::GetDxlValueFromSyncRead(double period_ms)
     (fast_read_permanent_ || fast_read_fail_count_ < 10))
   {
     DxlError comm_result = ProcessReadCommunication(port_handler_, period_ms, true, true);
-    if (comm_result == DxlError::OK) {
+    if (comm_result == DxlError::OK || comm_result == DxlError::DXL_HARDWARE_ERROR) {
       // Success, process data, and use fast sync read permanently
       for (auto it_read_data : read_data_list_) {
         uint8_t id = it_read_data.comm_id;
@@ -1606,7 +1606,7 @@ DxlError Dynamixel::GetDxlValueFromBulkRead(double period_ms)
     (fast_read_permanent_ || fast_read_fail_count_ < 10))
   {
     DxlError comm_result = ProcessReadCommunication(port_handler_, period_ms, false, true);
-    if (comm_result == DxlError::OK) {
+    if (comm_result == DxlError::OK || comm_result == DxlError::DXL_HARDWARE_ERROR) {
       // Success, process data, and use fast bulk read permanently
       if (group_bulk_read_) {
         delete group_bulk_read_;
