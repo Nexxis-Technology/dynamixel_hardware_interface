@@ -648,7 +648,7 @@ hardware_interface::return_type DynamixelHardware::read(
   if (dxl_state_pub_uni_ptr_) {
     dxl_state_msg_.header.stamp = this->now();
     dxl_state_msg_.comm_state = dxl_comm_err_;
-    const auto dxl_torque_state = dxl_comm_->GetDxlTorqueState();
+    const auto& dxl_torque_state = dxl_comm_->GetDxlTorqueState();
     for (auto it : hdl_trans_states_) {
       dxl_state_msg_.id.at(index) = it.id;
       dxl_state_msg_.dxl_hw_state.at(index) = dxl_hw_err_[it.id];

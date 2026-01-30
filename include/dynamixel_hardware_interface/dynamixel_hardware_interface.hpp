@@ -183,7 +183,6 @@ private:
   std::map<uint8_t /*id*/, uint8_t /*err*/> dxl_hw_err_;
   std::map<uint8_t /*id*/, uint8_t /*error code*/> dxl_error_code_;
   DxlTorqueStatus dxl_torque_status_;
-  std::map<std::pair<uint8_t /*comm_id*/, uint8_t /*id*/>, bool /*enable*/> dxl_torque_state_;
   std::vector<std::pair<uint8_t, uint8_t>> torque_enabled_comm_id_id_;
   double err_timeout_ms_;
   rclcpp::Duration read_error_duration_{0, 0};
