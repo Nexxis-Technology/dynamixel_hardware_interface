@@ -359,7 +359,6 @@ hardware_interface::CallbackReturn DynamixelHardware::on_init(
   dxl_state_pub_uni_ptr_ = std::make_unique<StatePublisher>(dxl_state_pub_);
 
   size_t num_of_pub_data = hdl_trans_states_.size();
-  dxl_state_pub_uni_ptr_->lock();
   dxl_state_msg_.id.resize(num_of_pub_data);
   dxl_state_msg_.dxl_hw_state.resize(num_of_pub_data);
   dxl_state_msg_.torque_state.resize(num_of_pub_data);
