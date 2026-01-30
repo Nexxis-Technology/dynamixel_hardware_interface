@@ -183,7 +183,6 @@ private:
   std::map<uint8_t /*id*/, uint8_t /*err*/> dxl_hw_err_;
   std::map<uint8_t /*id*/, uint8_t /*error code*/> dxl_error_code_;
   DxlTorqueStatus dxl_torque_status_;
-  std::map<std::pair<uint8_t /*comm_id*/, uint8_t /*id*/>, bool /*enable*/> dxl_torque_state_;
   std::vector<std::pair<uint8_t, uint8_t>> torque_enabled_comm_id_id_;
   double err_timeout_ms_;
   rclcpp::Duration read_error_duration_{0, 0};
@@ -315,6 +314,7 @@ private:
   using StatePublisher = realtime_tools::RealtimePublisher<DynamixelStateMsg>;
   rclcpp::Publisher<DynamixelStateMsg>::SharedPtr dxl_state_pub_;
   std::unique_ptr<StatePublisher> dxl_state_pub_uni_ptr_;
+  DynamixelStateMsg dxl_state_msg_;
 
   rclcpp::Service<dynamixel_interfaces::srv::GetDataFromDxl>::SharedPtr get_dxl_data_srv_;
   void get_dxl_data_srv_callback(
