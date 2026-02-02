@@ -113,10 +113,10 @@ hardware_interface::CallbackReturn DynamixelHardware::on_init(
   }
 
   // Add new parameter for torque initialization
-  bool disable_torque_at_init = false;
+  disable_torque_at_init_ = false;
   if (info_.hardware_parameters.find("disable_torque_at_init") != info_.hardware_parameters.end()) {
-    disable_torque_at_init = info_.hardware_parameters.at("disable_torque_at_init") == "true";
-    if (disable_torque_at_init) {
+    disable_torque_at_init_ = info_.hardware_parameters.at("disable_torque_at_init") == "true";
+    if (disable_torque_at_init_) {
       RCLCPP_INFO(
         logger_,
         "Torque will be disabled during initialization if it is enabled at initialization.");
@@ -574,7 +574,7 @@ hardware_interface::CallbackReturn DynamixelHardware::start()
 
   dxl_comm_->WriteMultiDxlData();
 
-  if (torque_enabled_comm_id_id_.size() > 0) {
+  if (torque_enabled_comm_id_id_.size() > 0 && !disable_torque_at_init_) {
     RCLCPP_INFO_STREAM(logger_, "Enabling torque for Dynamixels");
     for (int i = 0; i < 10; i++) {
       if (dxl_comm_->DynamixelEnable(torque_enabled_comm_id_id_) == DxlError::OK) {
