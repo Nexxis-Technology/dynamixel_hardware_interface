@@ -244,7 +244,7 @@ hardware_interface::CallbackReturn DynamixelHardware::on_init(
 
     if (type == "dxl" || type == "virtual_dxl") {
       std::vector<std::pair<uint8_t, uint8_t>> single_pair = {{comm_id, id}};
-      if (dxl_comm_->InitTorqueStates(single_pair, disable_torque_at_init) != DxlError::OK) {
+      if (dxl_comm_->InitTorqueStates(single_pair, disable_torque_at_init_) != DxlError::OK) {
         RCLCPP_ERROR_STREAM(
           logger_,
           "[comm_id:" << static_cast<int>(comm_id) <<
