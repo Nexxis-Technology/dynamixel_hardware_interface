@@ -362,8 +362,8 @@ hardware_interface::CallbackReturn DynamixelHardware::on_init(
   dxl_state_msg_.id.resize(num_of_pub_data);
   dxl_state_msg_.dxl_hw_state.resize(num_of_pub_data);
   dxl_state_msg_.torque_state.resize(num_of_pub_data);
-  dxl_state_msg_.temperature.resize(num_of_pub_data);
-  dxl_state_msg_.voltage.resize(num_of_pub_data);
+  dxl_state_msg_.present_temperature.resize(num_of_pub_data);
+  dxl_state_msg_.present_input_voltage.resize(num_of_pub_data);
   dxl_state_msg_.present_current.resize(num_of_pub_data);
   dxl_state_msg_.present_load.resize(num_of_pub_data);
 
@@ -664,10 +664,10 @@ hardware_interface::return_type DynamixelHardware::read(
         const std::string &interface_name = it.interface_name_vec.at(i);
         double value = *it.value_ptr_vec.at(i);
         if (interface_name == "Present Temperature"){
-          dxl_state_msg_.temperature.at(index) = static_cast<int16_t>(value);
+          dxl_state_msg_.present_temperature.at(index) = static_cast<int16_t>(value);
         }
         else if (interface_name == "Present Input Voltage"){
-          dxl_state_msg_.voltage.at(index) = static_cast<int16_t>(value * 10.0);
+          dxl_state_msg_.present_input_voltage.at(index) = static_cast<int16_t>(value * 10.0);
         }
         else if (interface_name == "Present Current"){
           dxl_state_msg_.present_current.at(index) = static_cast<int16_t>(value);
