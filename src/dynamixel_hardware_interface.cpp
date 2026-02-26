@@ -362,6 +362,10 @@ hardware_interface::CallbackReturn DynamixelHardware::on_init(
   dxl_state_msg_.id.resize(num_of_pub_data);
   dxl_state_msg_.dxl_hw_state.resize(num_of_pub_data);
   dxl_state_msg_.torque_state.resize(num_of_pub_data);
+  dxl_state_msg_.present_temperature.resize(num_of_pub_data);
+  dxl_state_msg_.present_input_voltage.resize(num_of_pub_data);
+  dxl_state_msg_.present_current.resize(num_of_pub_data);
+  dxl_state_msg_.present_load.resize(num_of_pub_data);
 
   using namespace std::placeholders;
 
@@ -655,7 +659,24 @@ hardware_interface::return_type DynamixelHardware::read(
       auto ts_it = dxl_torque_state.find({it.comm_id, it.id});
       bool ts = (ts_it != dxl_torque_state.end()) ? ts_it->second : false;
       dxl_state_msg_.torque_state.at(index) = ts;
-      index++;
+      for (size_t i = 0; i < it.interface_name_vec.size(); i++)
+      {
+        const std::string &interface_name = it.interface_name_vec.at(i);
+        double value = *it.value_ptr_vec.at(i);
+        if (interface_name == "Present Temperature"){
+          dxl_state_msg_.present_temperature.at(index) = static_cast<int16_t>(value);
+        }
+        else if (interface_name == "Present Input Voltage"){
+          dxl_state_msg_.present_input_voltage.at(index) = static_cast<int16_t>(value * 10.0);
+        }
+        else if (interface_name == "Present Current"){
+          dxl_state_msg_.present_current.at(index) = static_cast<int16_t>(value);
+        }
+        else if (interface_name == "Present Load"){
+          dxl_state_msg_.present_load.at(index) = static_cast<int16_t>(value);
+        }
+      }
+      index++; 
     }
     dxl_state_pub_uni_ptr_->tryPublish(dxl_state_msg_);
   }
